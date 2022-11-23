@@ -1,0 +1,14 @@
+sudo: required
+services:
+        - docker
+before_install:
+        -docker build -t leehe/react-test -f ./client/Dockerfile.dev ./client
+
+script: 
+        -docker run  leehe/react-test npm test -- --coverage
+
+after_success:
+        - docker build -t leehe/multi-client ./client 
+        - docker build -t leehe/multi-nginx ./nginx
+        - docker build -t leehe/multi-server ./server
+        - docker build -t leehe/multi-worker ./worker
